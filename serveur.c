@@ -267,7 +267,7 @@ int main (int argc, char* argv[]) {
       /*Extraction et affichage du message */
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
-      printf("Message recu : id : %d\nhl : %d \nintention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
+      printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
       close (s_service);
     }
 
