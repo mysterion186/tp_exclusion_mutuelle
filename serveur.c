@@ -319,7 +319,16 @@ int main (int argc, char* argv[]) {
   /* Boucle infini*/
   while(1) {
     temp++; 
-    if (temp == 5) break;
+    printf("tableau attente validation de la fonction (%d)\n",min_tableau(tableau_attente,NSites));
+    for (int i = 0; i < NSites; i++){
+      printf("%d ",tableau_attente[i]);
+    }
+    printf("tableau accord validation de la fonction (%d)\n",accord_tous(tableau_accord,NSites));
+    for (int i = 0; i < NSites; i++){
+      printf("%d ",tableau_accord[i]);
+    }
+    printf("test condition %d\n",((min_tableau(tableau_attente,NSites)==my_position) && (accord_tous(tableau_attente,NSites)==1)));
+    if (temp == 15) break;
     int r = rand() % 100 + 1;;
     printf("r : %d\n",r);
     if (r <= 70){
@@ -332,7 +341,10 @@ int main (int argc, char* argv[]) {
       // on envoie une demande pour entrer dans la section critique
       if (tableau_attente[my_position]!=1){ // cas où on n'a pas encore fait de demande pour entrer en SC
         tableau_attente[my_position]=1;
+        tableau_accord[my_position] = 1;
         // envoyer un message pour faire une requête d'entrée en SC
+        
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,1);
       }
     }
     /* On commence par tester l'arrivée d'un message */
@@ -342,11 +354,13 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
+      HL = max(HL,msg.id)+1;
       if (msg.intention == 0) { // fin de la SC
         tableau_attente[msg.id]=0;
       }
       else if (msg.intention == 1){ // demande pour être en SC
         tableau_attente[msg.id]=1;
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
       }
       else{ // cas où on reçoit un accord 
         tableau_accord[msg.id]=1;
@@ -357,9 +371,9 @@ int main (int argc, char* argv[]) {
 
     // test pour voir si on peut rentrer en section critique 
     // on regarde si on est le premier de la file d'attente et qu'on a l'accord de tous 
-    if (min_tableau(tableau_attente,NSites)==my_position && accord_tous(tableau_attente,NSites)){
+    if (min_tableau(tableau_attente,NSites)==my_position && accord_tous(tableau_attente,NSites)==1){
         HL++;
-        printf("Rentré en section critique");
+        printf("Rentré en section critique\n");
         in_SC = 1;
     }
 
