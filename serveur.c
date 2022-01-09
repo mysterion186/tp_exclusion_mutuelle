@@ -137,6 +137,29 @@ void SendSync(char *Site, int Port) {
   close (s_emis); 
 }
 
+// fonction pour envoyer des messages
+void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention){
+  Message msg;
+  int size_sock = sizeof(struct sockaddr_in);
+  for (int i = 0; i <NSites;i++){
+    if (i != my_position){
+      if ((tableau_socket[i] = socket(AF_INET, SOCK_STREAM,0))==-1){
+        perror("Création socket");
+        exit(-1);
+      }
+      if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)==-1){
+            perror("connect inter-site");
+          }
+      else{
+        msg.id = my_position;
+        msg.hl = HL;
+        msg.intention = intention;
+        write(tableau_socket[i],&msg,sizeof(msg));
+        close(tableau_socket[i]);
+      }
+    }
+  }
+}
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -292,29 +315,11 @@ int main (int argc, char* argv[]) {
       t=t/3;
     }
     
-      for (int i=0;i<NSites;i++) {
-        if (i!=my_position){
-          if((tableau_socket[i] = socket(AF_INET, SOCK_STREAM,0)) == -1){
-            perror("Creation socket");
-            exit(-1);
-          }
-          if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)==-1){
-            perror("connect inter-site");
-          }
-          else{
-            msg.id= my_position;
-            msg.hl = 10;
-            msg.intention = 0;
-            write(tableau_socket[i],&msg,sizeof(msg));
-            close(tableau_socket[i]);
-          }
-        }
-        else{
-          printf("*");
-        }
+  
+    envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
       
       
-    }
+    
     printf(".");fflush(0); /* pour montrer que le serveur est actif*/
   }
 
