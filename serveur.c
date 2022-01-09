@@ -145,7 +145,7 @@ int main (int argc, char* argv[]) {
   struct sockaddr_in sock_add, sock_add_dist,sock_envoie;
   struct hostent* hp;
   int size_sock;
-  int size_struct,envoie;
+  int size_struct;
   int s_ecoute, s_service;
   char texte[40];
   Message msg;
@@ -192,13 +192,10 @@ int main (int argc, char* argv[]) {
   }
   size_struct = sizeof(struct sockaddr_in);
  // seule le site 0 peut envoyer un msg au début pour le site 1
- if (my_position==0){
-   tableau_sockaddr[1].sin_family = AF_INET;
-   tableau_sockaddr[1].sin_port = htons(main_site+1);
-   memcpy(&tableau_sockaddr[1].sin_addr.s_addr, hp->h_addr, hp->h_length);
-   tableau_sockaddr[2].sin_family = AF_INET;
-   tableau_sockaddr[2].sin_port = htons(main_site+2);
-   memcpy(&tableau_sockaddr[2].sin_addr.s_addr, hp->h_addr, hp->h_length);
+ for (int i = 0; i < NSites; i++) {
+   tableau_sockaddr[i].sin_family = AF_INET;
+   tableau_sockaddr[i].sin_port = htons(main_site+i);
+   memcpy(&tableau_sockaddr[i].sin_addr.s_addr,hp->h_addr, hp->h_length);
  }
   if ( (s_ecoute=socket(AF_INET, SOCK_STREAM,0))==-1) {
     perror("Creation socket");
@@ -236,7 +233,7 @@ int main (int argc, char* argv[]) {
   printf("\n\nJe suis le site %d sur le port %d\n",my_position,PortBase);
   for (int i = 0; i <NSites;i++){
     if (i != my_position){
-      printf("Les autres sites sont %d avec pour identifiant %d\n",PortBase+i,i);
+      printf("Les autres sites sont %d avec pour identifiant %d\n",main_site+i,i);
     }
   }
 
@@ -277,25 +274,28 @@ int main (int argc, char* argv[]) {
       t=t*3;
       t=t/3;
     }
-    if (my_position==0){
+    
       for (int i=0;i<NSites;i++) {
-        if (i!=0){
+        if (i!=my_position){
           if((tableau_socket[i] = socket(AF_INET, SOCK_STREAM,0)) == -1){
             perror("Creation socket");
             exit(-1);
           }
-          if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)){
+          if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)==-1){
             perror("connect inter-site");
           }
           else{
             msg.id= my_position;
             msg.hl = 10;
             msg.intention = 0;
-            write(envoie,&msg,sizeof(msg));
-            close(envoie);
+            write(tableau_socket[i],&msg,sizeof(msg));
+            close(tableau_socket[i]);
           }
         }
-      }
+        else{
+          printf("*");
+        }
+      
       
     }
     printf(".");fflush(0); /* pour montrer que le serveur est actif*/
