@@ -55,8 +55,9 @@ void SendSync(char *site, int Port);
 
 // création d'une struct pour tester l'envoie de msg
 struct Message {
-  int a; 
-  int b;
+  int id; // id du site qui envoie le message
+  int hl; // valeur de l'horloge au moment de l'envoie des messages
+  int intention; // le but de ce msg entrer en section critique, sortie, donne l'autorisation
 };
 typedef struct Message Message;
 
@@ -181,7 +182,8 @@ int main (int argc, char* argv[]) {
   /*
     Communication entre site
   */
- struct sockaddr_in tableau[NSites]; 
+ struct sockaddr_in tableau_sockaddr[NSites]; 
+ int tableau_socket[NSites]; // tableau qu'on va utiliser pour intialiser un socket par site
  // Recup adresse tous les sites sont en localhost donc pas de soucis
   hp = gethostbyname("localhost");
   if (hp == NULL) {
@@ -191,12 +193,12 @@ int main (int argc, char* argv[]) {
   size_struct = sizeof(struct sockaddr_in);
  // seule le site 0 peut envoyer un msg au début pour le site 1
  if (my_position==0){
-   tableau[1].sin_family = AF_INET;
-   tableau[1].sin_port = htons(main_site+1);
-   memcpy(&tableau[1].sin_addr.s_addr, hp->h_addr, hp->h_length);
-   tableau[2].sin_family = AF_INET;
-   tableau[2].sin_port = htons(main_site+2);
-   memcpy(&tableau[2].sin_addr.s_addr, hp->h_addr, hp->h_length);
+   tableau_sockaddr[1].sin_family = AF_INET;
+   tableau_sockaddr[1].sin_port = htons(main_site+1);
+   memcpy(&tableau_sockaddr[1].sin_addr.s_addr, hp->h_addr, hp->h_length);
+   tableau_sockaddr[2].sin_family = AF_INET;
+   tableau_sockaddr[2].sin_port = htons(main_site+2);
+   memcpy(&tableau_sockaddr[2].sin_addr.s_addr, hp->h_addr, hp->h_length);
  }
   if ( (s_ecoute=socket(AF_INET, SOCK_STREAM,0))==-1) {
     perror("Creation socket");
@@ -231,7 +233,13 @@ int main (int argc, char* argv[]) {
   }
   printf("Avant le getsiepos");
   
-  printf("\n\n%d\n\n\n",my_position);
+  printf("\n\nJe suis le site %d sur le port %d\n",my_position,PortBase);
+  for (int i = 0; i <NSites;i++){
+    if (i != my_position){
+      printf("Les autres sites sont %d avec pour identifiant %d\n",PortBase+i,i);
+    }
+  }
+
   
   /* Passage en mode non bloquant du accept pour tous*/
   /*---------------------------------------*/
@@ -259,7 +267,7 @@ int main (int argc, char* argv[]) {
       /*Extraction et affichage du message */
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
-      printf("Message recu : %d/%d \n",msg.a,msg.b); fflush(0);
+      printf("Message recu : id : %d\nhl : %d \nintention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
       close (s_service);
     }
 
@@ -270,32 +278,23 @@ int main (int argc, char* argv[]) {
       t=t/3;
     }
     if (my_position==0){
-      if ( (envoie=socket(AF_INET, SOCK_STREAM,0))==-1) {
-      perror("Creation socket");
-      exit(-1);
-    }
-      if (connect(envoie,(struct sockaddr*) &tableau[1],size_sock)){
-        perror("connect inter-site");
-      }
-      else{
-        msg.a = 3;
-        msg.b = 10;
-        write(envoie,&msg,sizeof(msg));
-        close(envoie);
-      }
-      
-      if ( (envoie=socket(AF_INET, SOCK_STREAM,0))==-1) {
-      perror("Creation socket");
-      exit(-1);
-    }
-      if (connect(envoie,(struct sockaddr*) &tableau[2],size_sock)){
-        perror("connect inter-site");
-      }
-      else{
-        msg.a = 3;
-        msg.b = 10;
-        write(envoie,&msg,sizeof(msg));
-        close(envoie);
+      for (int i=0;i<NSites;i++) {
+        if (i!=0){
+          if((tableau_socket[i] = socket(AF_INET, SOCK_STREAM,0)) == -1){
+            perror("Creation socket");
+            exit(-1);
+          }
+          if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)){
+            perror("connect inter-site");
+          }
+          else{
+            msg.id= my_position;
+            msg.hl = 10;
+            msg.intention = 0;
+            write(envoie,&msg,sizeof(msg));
+            close(envoie);
+          }
+        }
       }
       
     }
