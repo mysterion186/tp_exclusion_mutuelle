@@ -70,7 +70,7 @@ int main (int argc, char* argv[]) {
     else {
       sprintf(chaine,"%s - %i",argv[3], i);
       longtxt =strlen(chaine);
-      l=write(client,chaine,longtxt+1);
+      l=write(client,&msg,sizeof(msg));
       close (client);
     }
   }

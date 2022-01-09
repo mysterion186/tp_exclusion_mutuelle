@@ -53,6 +53,14 @@ int GetSitePos(int Nbsites, char *argv[]) ;
 void WaitSync(int socket);
 void SendSync(char *site, int Port);
 
+// création d'une struct pour tester l'envoie de msg
+struct Message {
+  int a; 
+  int b;
+};
+typedef struct Message Message;
+
+
 /*Identification de ma position dans la liste */
 int GetSitePos(int NbSites, char *argv[]) {
   char MySiteName[20]; 
@@ -137,6 +145,7 @@ int main (int argc, char* argv[]) {
   int size_sock;
   int s_ecoute, s_service;
   char texte[40];
+  Message msg;
   int i,l,my_position;
   float t;
 
@@ -225,9 +234,9 @@ int main (int argc, char* argv[]) {
     s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
     if (s_service>0) {
       /*Extraction et affichage du message */
-      l=read(s_service,texte,39);
+      l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
-      printf("Message recu : %s\n",texte); fflush(0);
+      printf("Message recu : %d/%d \n",msg.a,msg.b); fflush(0);
       close (s_service);
     }
 
