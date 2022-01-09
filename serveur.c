@@ -53,6 +53,9 @@ int GetSitePos(int Nbsites, char *argv[]) ;
 void WaitSync(int socket);
 void SendSync(char *site, int Port);
 void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention);
+int accord_tous(int* tableau_attente,int NSites); // fonction qui renvoie si tous les sites ont donnés leurs accords pour passer dans al SC 
+int min_tableau(int* tableau_attente,int NSites); // fonction qui renvoie l'indice de la valeur min du tableau 
+
 
 // création d'une struct pour tester l'envoie de msg
 struct Message {
@@ -62,6 +65,11 @@ struct Message {
 };
 typedef struct Message Message;
 
+// fonction pour obtenir le max entre 2 valeurs
+int max(int num1, int num2)
+{
+    return (num1 > num2 ) ? num1 : num2;
+}
 
 /*Identification de ma position dans la liste */
 int GetSitePos(int NbSites, char *argv[]) {
@@ -89,7 +97,7 @@ void WaitSync(int s_ecoute) {
   int l;
   int s_service;
   struct sockaddr_in sock_add_dist;
-  int size_sock;
+  socklen_t size_sock;
   size_sock=sizeof(struct sockaddr_in);
   printf("WaitSync : ");fflush(0);
   s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
@@ -149,7 +157,8 @@ void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockadd
       }
       if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)==-1){
             perror("connect inter-site");
-          }
+            exit(-1);
+        }
       else{
         msg.id = my_position;
         msg.hl = HL;
@@ -159,6 +168,27 @@ void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockadd
       }
     }
   }
+}
+
+int accord_tous(int* tableau_attente, int NSites){ 
+  for (int i = 0; i <NSites;i++){
+    if (tableau_attente[i] != 1){
+      return -1;
+    }
+  }
+  return 1;
+}
+
+int min_tableau (int* tableau_attente, int NSites){
+  int pos = 0; 
+  int min = tableau_attente[0];
+  for (int i = 1; i <NSites;i++){
+    if (min > tableau_attente[i] && tableau_attente[i] > -1){
+      min = tableau_attente[i];
+      pos++;
+    }
+  }
+  return pos;
 }
 /***********************************************************************/
 /***********************************************************************/
@@ -203,16 +233,22 @@ int main (int argc, char* argv[]) {
 
   /* Création des variables pour réaliser l'algo de Lamport */ 
   struct hostent* hp;
-  int size_sock;
+  socklen_t size_sock;
   int size_struct;
   int HL = 0; // va stocker la valeur de l'horloge
   int in_SC = 0; // valeur pour savoir si le processus est en SC 
+  int temp = 0; 
   // on va utiliser la valeur en position tableau_attente[my_position] pour voir si une demande de SC a été faite
   struct sockaddr_in tableau_sockaddr[NSites]; 
   int tableau_socket[NSites]; // tableau qu'on va utiliser pour intialiser un socket par site
   int tableau_attente[NSites]; // tableau qu'on va utiliser pour voir les processus qui sont dans la file d'attente pour rentrer dans la SC
   int tableau_accord[NSites]; // tableau qu'on va utiliser pour savoir quels processus ont donnés leurs accords pour entrer dans la SC
   
+  // initialisation des tableaux 
+  for (int i = 0; i < NSites; i++){
+    tableau_attente[i] = -1; 
+    tableau_accord[i] = -1;
+  }
   /*
     Communication entre site
   */
@@ -282,13 +318,14 @@ int main (int argc, char* argv[]) {
   srand(time(NULL));
   /* Boucle infini*/
   while(1) {
-  
-    int r = rand();
-
+    temp++; 
+    if (temp == 5) break;
+    int r = rand() % 100 + 1;;
+    printf("r : %d\n",r);
     if (r <= 70){
       // on ne fait rien 
     }
-    else if (70<r && r<90){
+    else if (70<r && r<90 && in_SC != 1){
       HL++; // incrémentation de la valeur de l'horloge'
     }
     else{
@@ -305,9 +342,26 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
+      if (msg.intention == 0) { // fin de la SC
+        tableau_attente[msg.id]=0;
+      }
+      else if (msg.intention == 1){ // demande pour être en SC
+        tableau_attente[msg.id]=1;
+      }
+      else{ // cas où on reçoit un accord 
+        tableau_accord[msg.id]=1;
+      }
+      
       close (s_service);
     }
 
+    // test pour voir si on peut rentrer en section critique 
+    // on regarde si on est le premier de la file d'attente et qu'on a l'accord de tous 
+    if (min_tableau(tableau_attente,NSites)==my_position && accord_tous(tableau_attente,NSites)){
+        HL++;
+        printf("Rentré en section critique");
+        in_SC = 1;
+    }
 
     /* Petite boucle d'attente : c'est ici que l'on peut faire des choses*/
     for(l=0;l<10000000;l++) { 
@@ -316,11 +370,15 @@ int main (int argc, char* argv[]) {
     }
     
   
-    envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
+    //envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
       
       
-    
-    printf(".");fflush(0); /* pour montrer que le serveur est actif*/
+    if (in_SC == 1){
+      printf("*");fflush(0);
+    }
+    else {
+      printf(".");fflush(0); /* pour montrer que le serveur est actif*/
+    }
   }
 
 
