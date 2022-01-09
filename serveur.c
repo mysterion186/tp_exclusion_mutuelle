@@ -52,6 +52,7 @@ necessaire
 int GetSitePos(int Nbsites, char *argv[]) ;
 void WaitSync(int socket);
 void SendSync(char *site, int Port);
+void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention);
 
 // création d'une struct pour tester l'envoie de msg
 struct Message {
@@ -142,10 +143,8 @@ void SendSync(char *Site, int Port) {
 /***********************************************************************/
 
 int main (int argc, char* argv[]) {
-  struct sockaddr_in sock_add, sock_add_dist,sock_envoie;
-  struct hostent* hp;
-  int size_sock;
-  int size_struct;
+  struct sockaddr_in sock_add, sock_add_dist;
+  
   int s_ecoute, s_service;
   char texte[40];
   Message msg;
@@ -179,24 +178,37 @@ int main (int argc, char* argv[]) {
   sock_add.sin_addr.s_addr= htons(INADDR_ANY);  
   sock_add.sin_port = htons(PortBase);
 
+  /* Création des variables pour réaliser l'algo de Lamport */ 
+  struct hostent* hp;
+  int size_sock;
+  int size_struct;
+  int HL = 0; // va stocker la valeur de l'horloge
+  int in_SC = 0; // valeur pour savoir si le processus est en SC 
+  // on va utiliser la valeur en position tableau_attente[my_position] pour voir si une demande de SC a été faite
+  struct sockaddr_in tableau_sockaddr[NSites]; 
+  int tableau_socket[NSites]; // tableau qu'on va utiliser pour intialiser un socket par site
+  int tableau_attente[NSites]; // tableau qu'on va utiliser pour voir les processus qui sont dans la file d'attente pour rentrer dans la SC
+  int tableau_accord[NSites]; // tableau qu'on va utiliser pour savoir quels processus ont donnés leurs accords pour entrer dans la SC
+  
   /*
     Communication entre site
   */
- struct sockaddr_in tableau_sockaddr[NSites]; 
- int tableau_socket[NSites]; // tableau qu'on va utiliser pour intialiser un socket par site
  // Recup adresse tous les sites sont en localhost donc pas de soucis
   hp = gethostbyname("localhost");
   if (hp == NULL) {
 		perror("client");
 		return -1;
   }
+
   size_struct = sizeof(struct sockaddr_in);
- // seule le site 0 peut envoyer un msg au début pour le site 1
- for (int i = 0; i < NSites; i++) {
-   tableau_sockaddr[i].sin_family = AF_INET;
-   tableau_sockaddr[i].sin_port = htons(main_site+i);
-   memcpy(&tableau_sockaddr[i].sin_addr.s_addr,hp->h_addr, hp->h_length);
- }
+  // seule le site 0 peut envoyer un msg au début pour le site 1
+  for (int i = 0; i < NSites; i++) {
+    tableau_sockaddr[i].sin_family = AF_INET;
+    tableau_sockaddr[i].sin_port = htons(main_site+i);
+    memcpy(&tableau_sockaddr[i].sin_addr.s_addr,hp->h_addr, hp->h_length);
+  }
+
+
   if ( (s_ecoute=socket(AF_INET, SOCK_STREAM,0))==-1) {
     perror("Creation socket");
     exit(-1);
@@ -228,7 +240,8 @@ int main (int argc, char* argv[]) {
       WaitSync(s_ecoute);
       printf("Synchro recue de  Site 0\n");fflush(0);
   }
-  printf("Avant le getsiepos");
+  
+
   
   printf("\n\nJe suis le site %d sur le port %d\n",my_position,PortBase);
   for (int i = 0; i <NSites;i++){
@@ -243,20 +256,24 @@ int main (int argc, char* argv[]) {
   fcntl(s_ecoute,F_SETFL,O_NONBLOCK);
   size_sock=sizeof(struct sockaddr_in);
   
+  srand(time(NULL));
   /* Boucle infini*/
   while(1) {
   
-    srand(time(NULL));
     int r = rand();
 
     if (r <= 70){
       // on ne fait rien 
     }
     else if (70<r && r<90){
-      // on fait incrémenter la valeur de HL
+      HL++; // incrémentation de la valeur de l'horloge'
     }
     else{
       // on envoie une demande pour entrer dans la section critique
+      if (tableau_attente[my_position]!=1){ // cas où on n'a pas encore fait de demande pour entrer en SC
+        tableau_attente[my_position]=1;
+        // envoyer un message pour faire une requête d'entrée en SC
+      }
     }
     /* On commence par tester l'arrivée d'un message */
     s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
