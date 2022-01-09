@@ -37,25 +37,29 @@ int main (int argc, char* argv[]) {
   int i,l,longtxt;
   struct hostent* hp;
   Message msg;
-  msg.a = 30;
-  msg.b = 7;
+  msg.a = 3;
+  msg.b = 10;
 
+ struct sockaddr_in tableau[3];
   if (argc != 5 ) {
     printf("Erreur arguments : NomMachine NumeroPort Message NbEnvois\n");
     exit(-1);
   }
 
   // Recup adresse 
-  hp = gethostbyname(argv[1]);
+  hp = gethostbyname("localhost");
   if (hp == NULL) {
 		perror("client");
 		return -1;
   }
 
   size_sock_add=sizeof(struct sockaddr_in);
-  sock_add.sin_family = AF_INET;
-  sock_add.sin_port = htons(atoi(argv[2]));
-  memcpy(&sock_add.sin_addr.s_addr, hp->h_addr, hp->h_length);
+  // sock_add.sin_family = AF_INET;
+  tableau[1].sin_family = AF_INET;
+  // sock_add.sin_port = htons(atoi(argv[2]));
+  tableau[1].sin_port = htons(atoi(argv[2]));
+  // memcpy(&sock_add.sin_addr.s_addr, hp->h_addr, hp->h_length);
+  memcpy(&tableau[1].sin_addr.s_addr, hp->h_addr, hp->h_length);
 
 
 
@@ -65,7 +69,8 @@ int main (int argc, char* argv[]) {
       exit(-1);
     }
     
-    if (connect(client, (struct sockaddr*) &sock_add,size_sock_add )==-1) {
+    // if (connect(client, (struct sockaddr*) &sock_add,size_sock_add )==-1) {
+    if (connect(client, (struct sockaddr*) &tableau[1],size_sock_add )==-1) {
       perror("Probleme connect"); }
     else {
       sprintf(chaine,"%s - %i",argv[3], i);

@@ -141,8 +141,10 @@ void SendSync(char *Site, int Port) {
 /***********************************************************************/
 
 int main (int argc, char* argv[]) {
-  struct sockaddr_in sock_add, sock_add_dist;
+  struct sockaddr_in sock_add, sock_add_dist,sock_envoie;
+  struct hostent* hp;
   int size_sock;
+  int size_struct,envoie;
   int s_ecoute, s_service;
   char texte[40];
   Message msg;
@@ -167,14 +169,35 @@ int main (int argc, char* argv[]) {
 
   /*CREATION&BINDING DE LA SOCKET DE CE SITE*/
   PortBase=atoi(argv[2]) ;//+GetSitePos(NSites, argv);
+  int main_site = atoi(argv[1]);
   printf("Numero de port de ce site %d\n",PortBase);
-  my_position = PortBase-atoi(argv[1])+1; // position du site selon le site de base
+  my_position = PortBase-main_site; // position du site selon le site de base
 
-  struct sockaddr_in tableau[3];
+  // socket principale ? 
   sock_add.sin_family = AF_INET;
   sock_add.sin_addr.s_addr= htons(INADDR_ANY);  
   sock_add.sin_port = htons(PortBase);
 
+  /*
+    Communication entre site
+  */
+ struct sockaddr_in tableau[NSites]; 
+ // Recup adresse tous les sites sont en localhost donc pas de soucis
+  hp = gethostbyname("localhost");
+  if (hp == NULL) {
+		perror("client");
+		return -1;
+  }
+  size_struct = sizeof(struct sockaddr_in);
+ // seule le site 0 peut envoyer un msg au début pour le site 1
+ if (my_position==0){
+   tableau[1].sin_family = AF_INET;
+   tableau[1].sin_port = htons(main_site+1);
+   memcpy(&tableau[1].sin_addr.s_addr, hp->h_addr, hp->h_length);
+   tableau[2].sin_family = AF_INET;
+   tableau[2].sin_port = htons(main_site+2);
+   memcpy(&tableau[2].sin_addr.s_addr, hp->h_addr, hp->h_length);
+ }
   if ( (s_ecoute=socket(AF_INET, SOCK_STREAM,0))==-1) {
     perror("Creation socket");
     exit(-1);
@@ -242,11 +265,40 @@ int main (int argc, char* argv[]) {
 
 
     /* Petite boucle d'attente : c'est ici que l'on peut faire des choses*/
-    for(l=0;l<1000000;l++) { 
+    for(l=0;l<10000000;l++) { 
       t=t*3;
       t=t/3;
     }
-    
+    if (my_position==0){
+      if ( (envoie=socket(AF_INET, SOCK_STREAM,0))==-1) {
+      perror("Creation socket");
+      exit(-1);
+    }
+      if (connect(envoie,(struct sockaddr*) &tableau[1],size_sock)){
+        perror("connect inter-site");
+      }
+      else{
+        msg.a = 3;
+        msg.b = 10;
+        write(envoie,&msg,sizeof(msg));
+        close(envoie);
+      }
+      
+      if ( (envoie=socket(AF_INET, SOCK_STREAM,0))==-1) {
+      perror("Creation socket");
+      exit(-1);
+    }
+      if (connect(envoie,(struct sockaddr*) &tableau[2],size_sock)){
+        perror("connect inter-site");
+      }
+      else{
+        msg.a = 3;
+        msg.b = 10;
+        write(envoie,&msg,sizeof(msg));
+        close(envoie);
+      }
+      
+    }
     printf(".");fflush(0); /* pour montrer que le serveur est actif*/
   }
 
