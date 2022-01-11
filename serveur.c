@@ -181,14 +181,22 @@ int accord_tous(int* tableau_attente, int NSites){
 
 int min_tableau (int* tableau_attente, int NSites){
   int pos = 0; 
+  int somme = 0;
   int min = tableau_attente[0];
   for (int i = 1; i <NSites;i++){
-    if (min > tableau_attente[i] && tableau_attente[i] > -1){
+    if (min==-1){
       min = tableau_attente[i];
       pos++;
     }
+    else if (min > tableau_attente[i] && tableau_attente[i] > -1){
+      min = tableau_attente[i];
+      pos++;
+    }
+    if (tableau_attente[i]==-1){
+      somme--;
+    }
   }
-  if (tableau_attente[pos]==-1){
+  if (-somme == NSites){
     return -1;
   }
   return pos;
@@ -319,12 +327,13 @@ int main (int argc, char* argv[]) {
   fcntl(s_ecoute,F_SETFL,O_NONBLOCK);
   size_sock=sizeof(struct sockaddr_in);
   
-  srand(time(NULL));
+  //srand(time(NULL));
+  srand(5);
   /* Boucle infini*/
   while(1) {
     temp++; 
     
-    if (temp == 15) break;
+    if (temp == 30) break;
     int r = rand() % 100 + 1;;
     printf("r : %d\n",r);
     if (r <= 70){
@@ -335,7 +344,7 @@ int main (int argc, char* argv[]) {
     }
     else{
       // on envoie une demande pour entrer dans la section critique
-      if (tableau_attente[my_position]!=1){ // cas où on n'a pas encore fait de demande pour entrer en SC
+      if (tableau_attente[my_position]==-1){ // cas où on n'a pas encore fait de demande pour entrer en SC
         tableau_attente[my_position]=HL;
         tableau_accord[my_position] = 1;
         // envoyer un message pour faire une requête d'entrée en SC
@@ -351,7 +360,7 @@ int main (int argc, char* argv[]) {
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
       HL = max(HL,msg.id)+1;
       if (msg.intention == 0) { // fin de la SC
-        tableau_attente[msg.id]=0;
+        tableau_attente[msg.id]=-1;
       }
       else if (msg.intention == 1){ // demande pour être en SC
         tableau_attente[msg.id]=msg.hl;
@@ -397,11 +406,15 @@ int main (int argc, char* argv[]) {
     if (in_SC == 1){
       printf("*");fflush(0);
       time_SC++;
-      // if (time_SC> 5){
-      //   // code pour faire la libération
-      //   envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
-      //   tableau_attente[my_position] = -1;
-      // }
+      if (time_SC > 5){
+        // code pour faire la libération
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
+        tableau_attente[my_position] = -1;
+        for (int i = 0; i < NSites; i++){
+          tableau_accord[i] = 0;
+        }
+        in_SC = 0;
+      }
     }
     else {
       printf(".");fflush(0); /* pour montrer que le serveur est actif*/
