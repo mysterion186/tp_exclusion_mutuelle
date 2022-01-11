@@ -194,6 +194,7 @@ int min_tableau (int* tableau_attente, int NSites){
     }
     if (tableau_attente[i]==-1){
       somme--;
+      pos++;
     }
   }
   if (-somme == NSites){
