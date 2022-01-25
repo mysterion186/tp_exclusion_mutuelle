@@ -328,8 +328,8 @@ int main (int argc, char* argv[]) {
   fcntl(s_ecoute,F_SETFL,O_NONBLOCK);
   size_sock=sizeof(struct sockaddr_in);
   
-  //srand(time(NULL));
   srand(5);
+  //srand(time(NULL));
   /* Boucle infini*/
   while(1) {
     temp++; 
@@ -359,7 +359,7 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
-      HL = max(HL,msg.id)+1;
+      HL = max(HL,msg.hl)+1;
       if (msg.intention == 0) { // fin de la SC
         tableau_attente[msg.id]=-1;
       }
@@ -376,7 +376,7 @@ int main (int argc, char* argv[]) {
 
     // test pour voir si on peut rentrer en section critique 
     // on regarde si on est le premier de la file d'attente et qu'on a l'accord de tous 
-    if (min_tableau(tableau_attente,NSites)==my_position && accord_tous(tableau_accord,NSites)==1){
+    if (in_SC != 1 && min_tableau(tableau_attente,NSites)==my_position && accord_tous(tableau_accord,NSites)==1){
         HL++;
         printf("Rentré en section critique\n");
         in_SC = 1;
@@ -405,7 +405,7 @@ int main (int argc, char* argv[]) {
       
       
     if (in_SC == 1){
-      printf("*");fflush(0);
+      printf("*\n");fflush(0);
       time_SC++;
       if (time_SC > 5){
         // code pour faire la libération
@@ -418,12 +418,12 @@ int main (int argc, char* argv[]) {
       }
     }
     else {
-      printf(".");fflush(0); /* pour montrer que le serveur est actif*/
+      printf(".\n");fflush(0); /* pour montrer que le serveur est actif*/
     }
+    printf("La valeur de HL pour le site %d est %d\n\n\n",my_position,HL);
   }
 
 
   close (s_ecoute);  
   return 0;
 }
-
