@@ -328,7 +328,7 @@ int main (int argc, char* argv[]) {
   fcntl(s_ecoute,F_SETFL,O_NONBLOCK);
   size_sock=sizeof(struct sockaddr_in);
   
-  srand(5);
+  srand(my_position);
   //srand(time(NULL));
   /* Boucle infini*/
   while(1) {
@@ -359,7 +359,7 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
-      HL = max(HL,msg.hl)+1;
+      HL = max(HL,msg.hl)+1; // maj de l'horloge 
       if (msg.intention == 0) { // fin de la SC
         tableau_attente[msg.id]=-1;
       }
@@ -382,17 +382,17 @@ int main (int argc, char* argv[]) {
         in_SC = 1;
     }
 
-    printf("tableau attente pos = %d my_position = %d result = %d\n",min_tableau(tableau_attente,NSites),my_position,min_tableau(tableau_attente,NSites)==my_position);
-    for (int i = 0; i < NSites; i++){
-      printf("%d ",tableau_attente[i]);
-    }
-    printf("\n");
-    printf("tableau accord validation de la fonction (%d)\n",accord_tous(tableau_accord,NSites)==1);
-    for (int i = 0; i < NSites; i++){
-      printf("%d ",tableau_accord[i]);
-    }
-    printf("\n");
-    printf("test condition (%d)\n",((min_tableau(tableau_attente,NSites)==my_position) && (accord_tous(tableau_accord,NSites)==1)));
+    // printf("tableau attente pos = %d my_position = %d result = %d\n",min_tableau(tableau_attente,NSites),my_position,min_tableau(tableau_attente,NSites)==my_position);
+    // for (int i = 0; i < NSites; i++){
+    //   printf("%d ",tableau_attente[i]);
+    // }
+    // printf("\n");
+    // printf("tableau accord validation de la fonction (%d)\n",accord_tous(tableau_accord,NSites)==1);
+    // for (int i = 0; i < NSites; i++){
+    //   printf("%d ",tableau_accord[i]);
+    // }
+    // printf("\n");
+    // printf("test condition (%d)\n",((min_tableau(tableau_attente,NSites)==my_position) && (accord_tous(tableau_accord,NSites)==1)));
 
     /* Petite boucle d'attente : c'est ici que l'on peut faire des choses*/
     for(l=0;l<10000000;l++) { 
@@ -405,12 +405,13 @@ int main (int argc, char* argv[]) {
       
       
     if (in_SC == 1){
-      printf("*\n");fflush(0);
+      printf("*");fflush(0);
       time_SC++;
       if (time_SC > 5){
         // code pour faire la libération
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
-        tableau_attente[my_position] = -1;
+        tableau_attente[my_position] = -1; // on s'enlève de la liste des sites qui veulent aller en SC
+        // on remet à 0 les accords pour entrer en SC
         for (int i = 0; i < NSites; i++){
           tableau_accord[i] = 0;
         }
@@ -418,9 +419,9 @@ int main (int argc, char* argv[]) {
       }
     }
     else {
-      printf(".\n");fflush(0); /* pour montrer que le serveur est actif*/
+      printf(".");fflush(0); /* pour montrer que le serveur est actif*/
     }
-    printf("La valeur de HL pour le site %d est %d\n\n\n",my_position,HL);
+    printf("La valeur de HL pour le site %d est %d\n",my_position,HL);
   }
 
 
