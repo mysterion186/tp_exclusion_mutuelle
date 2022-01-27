@@ -367,7 +367,7 @@ int main (int argc, char* argv[]) {
         tableau_attente[msg.id]=msg.hl;
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
       }
-      else{ // cas où on reçoit un accord 
+      else if (msg.intention == 2 && tableau_accord[my_position]==1){ // cas où on reçoit un accord 
         tableau_accord[msg.id]=1;
       }
       
@@ -382,17 +382,17 @@ int main (int argc, char* argv[]) {
         in_SC = 1;
     }
 
-    // printf("tableau attente pos = %d my_position = %d result = %d\n",min_tableau(tableau_attente,NSites),my_position,min_tableau(tableau_attente,NSites)==my_position);
-    // for (int i = 0; i < NSites; i++){
-    //   printf("%d ",tableau_attente[i]);
-    // }
-    // printf("\n");
-    // printf("tableau accord validation de la fonction (%d)\n",accord_tous(tableau_accord,NSites)==1);
-    // for (int i = 0; i < NSites; i++){
-    //   printf("%d ",tableau_accord[i]);
-    // }
-    // printf("\n");
-    // printf("test condition (%d)\n",((min_tableau(tableau_attente,NSites)==my_position) && (accord_tous(tableau_accord,NSites)==1)));
+    printf("tableau attente pos = %d my_position = %d result = %d\n",min_tableau(tableau_attente,NSites),my_position,min_tableau(tableau_attente,NSites)==my_position);
+    for (int i = 0; i < NSites; i++){
+      printf("%d ",tableau_attente[i]);
+    }
+    printf("\n");
+    printf("tableau accord validation de la fonction (%d)\n",accord_tous(tableau_accord,NSites)==1);
+    for (int i = 0; i < NSites; i++){
+      printf("%d ",tableau_accord[i]);
+    }
+    printf("\n");
+    printf("test condition (%d)\n",((min_tableau(tableau_attente,NSites)==my_position) && (accord_tous(tableau_accord,NSites)==1)));
 
     /* Petite boucle d'attente : c'est ici que l'on peut faire des choses*/
     for(l=0;l<10000000;l++) { 
