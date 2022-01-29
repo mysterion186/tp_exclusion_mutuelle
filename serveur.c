@@ -352,6 +352,7 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       HL = max(HL,msg.hl)+1; // maj de l'horloge 
+      printf("Valeur intermédiare de HL (avant quelconque envoie %d\n",HL);
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
       if (msg.intention == 0) { // fin de la SC
         tableau_attente[msg.id]=-1;
