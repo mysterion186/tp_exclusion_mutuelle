@@ -415,6 +415,7 @@ int main (int argc, char* argv[]) {
       printf("*");fflush(0);
       time_SC++;
       if (time_SC > 5){
+        HL++; 
         // code pour faire la libération
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0,-1);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,0);
