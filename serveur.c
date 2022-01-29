@@ -341,8 +341,10 @@ int main (int argc, char* argv[]) {
         tableau_accord[my_position] = 1;
         // envoyer un message pour faire une requête d'entrée en SC
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,1);
+        printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,1);
       }
     }
+    printf("La valeur de HL après la boucle while est %d\n",HL);
     /* On commence par tester l'arrivée d'un message */
     s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
     if (s_service>0) {
@@ -358,6 +360,7 @@ int main (int argc, char* argv[]) {
         tableau_attente[msg.id]=msg.hl;
         HL = max(HL,msg.hl)+1; // maj de l'horloge  
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
+        printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,2);
       }
       else if (msg.intention == 2 && tableau_accord[my_position]==1){ // cas où on reçoit un accord 
         tableau_accord[msg.id]=1;
@@ -402,6 +405,7 @@ int main (int argc, char* argv[]) {
       if (time_SC > 5){
         // code pour faire la libération
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
+        printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,0);
         tableau_attente[my_position] = -1; // on s'enlève de la liste des sites qui veulent aller en SC
         // on remet à 0 les accords pour entrer en SC
         for (int i = 0; i < NSites; i++){
@@ -413,7 +417,7 @@ int main (int argc, char* argv[]) {
     else {
       printf(".");fflush(0); /* pour montrer que le serveur est actif*/
     }
-    printf("La valeur de HL pour le site %d est %d\n",my_position,HL);
+    printf("La valeur de HL pour le site %d à la fin de la boucle while est %d\n",my_position,HL);
   }
 
 
