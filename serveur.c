@@ -351,14 +351,15 @@ int main (int argc, char* argv[]) {
       /*Extraction et affichage du message */
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
+      HL = max(HL,msg.hl)+1; // maj de l'horloge 
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
       if (msg.intention == 0) { // fin de la SC
         tableau_attente[msg.id]=-1;
-        HL = max(HL,msg.hl)+1; // maj de l'horloge  
+         
       }
       else if (msg.intention == 1){ // demande pour être en SC
         tableau_attente[msg.id]=msg.hl;
-        HL = max(HL,msg.hl)+1; // maj de l'horloge  
+        //HL = max(HL,msg.hl)+1; // maj de l'horloge  
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,2);
       }
