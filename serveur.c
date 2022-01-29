@@ -365,6 +365,7 @@ int main (int argc, char* argv[]) {
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,2);
       }
       else if (msg.intention == 2 && tableau_accord[my_position]==1){ // cas où on reçoit un accord 
+      HL++; //on incrémenta la valeur de HL pour indiquer qu'on envoie la réponse à l'instant d'après
         tableau_accord[msg.id]=1;
       }
       
