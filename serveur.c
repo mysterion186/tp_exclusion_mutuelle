@@ -361,11 +361,11 @@ int main (int argc, char* argv[]) {
       else if (msg.intention == 1){ // demande pour être en SC
         tableau_attente[msg.id]=msg.hl;
         //HL = max(HL,msg.hl)+1; // maj de l'horloge  
+        HL++; //on incrémenta la valeur de HL pour indiquer qu'on envoie la réponse à l'instant d'après
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,2);
       }
       else if (msg.intention == 2 && tableau_accord[my_position]==1){ // cas où on reçoit un accord 
-      HL++; //on incrémenta la valeur de HL pour indiquer qu'on envoie la réponse à l'instant d'après
         tableau_accord[msg.id]=1;
       }
       
