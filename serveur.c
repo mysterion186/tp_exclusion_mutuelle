@@ -52,7 +52,7 @@ necessaire
 int GetSitePos(int Nbsites, char *argv[]) ;
 void WaitSync(int socket);
 void SendSync(char *site, int Port);
-void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention);
+void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention, int to);
 int accord_tous(int* tableau_attente,int NSites); // fonction qui renvoie si tous les sites ont donnés leurs accords pour passer dans al SC 
 int min_tableau(int* tableau_attente,int NSites); // fonction qui renvoie l'indice de la valeur min du tableau 
 
@@ -62,6 +62,7 @@ struct Message {
   int id; // id du site qui envoie le message
   int hl; // valeur de l'horloge au moment de l'envoie des messages
   int intention; // le but de ce msg entrer en section critique, sortie, donne l'autorisation
+  int to; // id du site vers qui on envoie un message (on met -1 si c'est un message pour tous le monde)
 };
 typedef struct Message Message;
 
@@ -146,7 +147,7 @@ void SendSync(char *Site, int Port) {
 }
 
 // fonction pour envoyer des messages
-void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention){
+void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention, int to){
   Message msg;
   int size_sock = sizeof(struct sockaddr_in);
   for (int i = 0; i <NSites;i++){
@@ -163,6 +164,7 @@ void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockadd
         msg.id = my_position;
         msg.hl = HL;
         msg.intention = intention;
+        msg.to = to;
         write(tableau_socket[i],&msg,sizeof(msg));
         close(tableau_socket[i]);
       }
@@ -340,7 +342,7 @@ int main (int argc, char* argv[]) {
         tableau_attente[my_position]=HL;
         tableau_accord[my_position] = 1;
         // envoyer un message pour faire une requête d'entrée en SC
-        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,1);
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,1,-1);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,1);
       }
     }
@@ -351,23 +353,30 @@ int main (int argc, char* argv[]) {
       /*Extraction et affichage du message */
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
-      HL = max(HL,msg.hl)+1; // maj de l'horloge 
-      printf("Valeur intermédiare de HL (avant quelconque envoie %d\n",HL);
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
       if (msg.intention == 0) { // fin de la SC
+        HL = max(HL,msg.hl)+1; // maj de l'horloge 
         tableau_attente[msg.id]=-1;
          
       }
       else if (msg.intention == 1){ // demande pour être en SC
+        HL = max(HL,msg.hl)+1; // maj de l'horloge 
         tableau_attente[msg.id]=msg.hl;
         //HL = max(HL,msg.hl)+1; // maj de l'horloge  
         HL++; //on incrémenta la valeur de HL pour indiquer qu'on envoie la réponse à l'instant d'après
-        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2,msg.id);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,2);
       }
-      else if (msg.intention == 2 && tableau_accord[my_position]==1){ // cas où on reçoit un accord 
-        tableau_accord[msg.id]=1;
+      else if (msg.intention == 2 ){ // cas où on reçoit un accord et que le message est adressé à moi 
+        if (msg.to==my_position){
+          HL = max(HL,msg.hl)+1; // maj de l'horloge 
+          tableau_accord[msg.id]=1;
+        }
+        else{
+          printf("Le message plus haut ne me concerne pas \n");
+        }
       }
+      printf("Valeur intermédiare de HL (après quelconque envoie %d)\n",HL);
       
       close (s_service);
     }
@@ -407,7 +416,7 @@ int main (int argc, char* argv[]) {
       time_SC++;
       if (time_SC > 5){
         // code pour faire la libération
-        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0,-1);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,0);
         tableau_attente[my_position] = -1; // on s'enlève de la liste des sites qui veulent aller en SC
         // on remet à 0 les accords pour entrer en SC
