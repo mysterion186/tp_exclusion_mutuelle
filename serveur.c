@@ -350,12 +350,13 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
-      HL = max(HL,msg.hl)+1; // maj de l'horloge 
       if (msg.intention == 0) { // fin de la SC
         tableau_attente[msg.id]=-1;
+        HL = max(HL,msg.hl)+1; // maj de l'horloge  
       }
       else if (msg.intention == 1){ // demande pour être en SC
         tableau_attente[msg.id]=msg.hl;
+        HL = max(HL,msg.hl)+1; // maj de l'horloge  
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2);
       }
       else if (msg.intention == 2 && tableau_accord[my_position]==1){ // cas où on reçoit un accord 
