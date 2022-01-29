@@ -181,23 +181,14 @@ int accord_tous(int* tableau_attente, int NSites){
 
 int min_tableau (int* tableau_attente, int NSites){
   int pos = 0; 
-  int somme = 0;
   int min = tableau_attente[0];
-  for (int i = 1; i <NSites;i++){
-    if (min==-1){
+  for (int i = 1; i < NSites;i++){
+    if (tableau_attente[i]> -1 && min>tableau_attente[i]){
+      pos = i;
       min = tableau_attente[i];
-      pos++;
-    }
-    else if (min > tableau_attente[i] && tableau_attente[i] > -1){
-      min = tableau_attente[i];
-      pos++;
-    }
-    if (tableau_attente[i]==-1){
-      somme--;
-      pos++;
     }
   }
-  if (-somme == NSites){
+  if (pos==0 && tableau_attente[0]){
     return -1;
   }
   return pos;
