@@ -8,214 +8,217 @@ Je suis le site 0 sur le port 10000
 Les autres sites sont 10001 avec pour identifiant 1
 Les autres sites sont 10002 avec pour identifiant 2
 r : 31
-tableau attente pos = 4 my_position = 0 result = 0
+tableau attente pos = -1 my_position = 0 result = 0
 -1 -1 -1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
 test condition (0)
 .La valeur de HL pour le site 0 est 0
 r : 92
+tableau attente pos = 0 my_position = 0 result = 1
+0 -1 -1 
+tableau accord validation de la fonction (0)
+1 -1 -1 
+test condition (0)
+.La valeur de HL pour le site 0 est 0
+r : 16
 Message recu : id : 2 hl : 0  intention : 1 
-tableau attente pos = 1 my_position = 0 result = 0
+tableau attente pos = 0 my_position = 0 result = 1
 0 -1 0 
 tableau accord validation de la fonction (0)
 1 -1 -1 
 test condition (0)
 .La valeur de HL pour le site 0 est 1
-r : 16
-Message recu : id : 2 hl : 1  intention : 2 
-tableau attente pos = 1 my_position = 0 result = 0
+r : 73
+Message recu : id : 1 hl : 1  intention : 2 
+tableau attente pos = 0 my_position = 0 result = 1
 0 -1 0 
 tableau accord validation de la fonction (0)
-1 -1 1 
+1 1 -1 
 test condition (0)
-.La valeur de HL pour le site 0 est 2
-r : 73
-Message recu : id : 1 hl : 2  intention : 2 
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 4
+.La valeur de HL pour le site 0 est 3
 r : 62
-Message recu : id : 1 hl : 3  intention : 2 
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 42
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 11
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 38
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 99
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 42
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 95
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 5
-r : 81
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 6
-r : 27
-tableau attente pos = 1 my_position = 0 result = 0
-0 -1 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (0)
-.La valeur de HL pour le site 0 est 6
-r : 97
-Message recu : id : 1 hl : 7  intention : 1 
+Message recu : id : 2 hl : 1  intention : 2 
 Rentré en section critique
 tableau attente pos = 0 my_position = 0 result = 1
-0 7 0 
+0 -1 0 
 tableau accord validation de la fonction (1)
 1 1 1 
 test condition (1)
-*La valeur de HL pour le site 0 est 9
-r : 11
-Message recu : id : 2 hl : 10  intention : 2 
-tableau attente pos = 0 my_position = 0 result = 1
-0 7 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 0 est 11
-r : 89
-tableau attente pos = 0 my_position = 0 result = 1
-0 7 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 0 est 11
-r : 60
-tableau attente pos = 0 my_position = 0 result = 1
-0 7 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 0 est 11
-r : 6
-tableau attente pos = 0 my_position = 0 result = 1
-0 7 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 0 est 11
-r : 85
-tableau attente pos = 0 my_position = 0 result = 1
-0 7 0 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 0 est 11
-r : 15
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 11
-r : 27
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 11
-r : 14
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 11
-r : 84
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 12
-r : 55
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 12
-r : 88
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 13
+*La valeur de HL pour le site 0 est 5
 r : 42
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 13
-r : 47
-tableau attente pos = 2 my_position = 0 result = 0
--1 7 0 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 0 est 13
+Message recu : id : 1 hl : 3  intention : 2 
+tableau attente pos = 0 my_position = 0 result = 1
+0 -1 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 0 est 6
+r : 11
+tableau attente pos = 0 my_position = 0 result = 1
+0 -1 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 0 est 6
 r : 38
-Message recu : id : 2 hl : 15  intention : 0 
+tableau attente pos = 0 my_position = 0 result = 1
+0 -1 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 0 est 6
+r : 99
+tableau attente pos = 0 my_position = 0 result = 1
+0 -1 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 0 est 6
+r : 42
+tableau attente pos = 0 my_position = 0 result = 1
+0 -1 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 0 est 6
+r : 95
 tableau attente pos = 2 my_position = 0 result = 0
--1 7 -1 
+6 -1 0 
 tableau accord validation de la fonction (0)
-0 0 0 
+1 0 0 
+test condition (0)
+.La valeur de HL pour le site 0 est 6
+r : 81
+tableau attente pos = 2 my_position = 0 result = 0
+6 -1 0 
+tableau accord validation de la fonction (0)
+1 0 0 
+test condition (0)
+.La valeur de HL pour le site 0 est 7
+r : 27
+Message recu : id : 1 hl : 9  intention : 2 
+tableau attente pos = 2 my_position = 0 result = 0
+6 -1 0 
+tableau accord validation de la fonction (0)
+1 1 0 
+test condition (0)
+.La valeur de HL pour le site 0 est 10
+r : 97
+Message recu : id : 2 hl : 10  intention : 2 
+tableau attente pos = 2 my_position = 0 result = 0
+6 -1 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 11
+r : 11
+Message recu : id : 1 hl : 9  intention : 1 
+tableau attente pos = 2 my_position = 0 result = 0
+6 9 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 12
+r : 89
+Message recu : id : 2 hl : 13  intention : 2 
+tableau attente pos = 2 my_position = 0 result = 0
+6 9 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 14
+r : 60
+tableau attente pos = 2 my_position = 0 result = 0
+6 9 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 14
+r : 6
+tableau attente pos = 2 my_position = 0 result = 0
+6 9 0 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 14
+r : 85
+Message recu : id : 2 hl : 14  intention : 0 
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
 test condition (0)
 .La valeur de HL pour le site 0 est 16
-r : 54
-Message recu : id : 2 hl : 15  intention : 1 
-tableau attente pos = 1 my_position = 0 result = 0
--1 7 15 
-tableau accord validation de la fonction (0)
-0 0 0 
+r : 15
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
 test condition (0)
-.La valeur de HL pour le site 0 est 17
+.La valeur de HL pour le site 0 est 16
+r : 27
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 16
+r : 14
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 16
+r : 84
+Message recu : id : 2 hl : 15  intention : 1 
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 18
+r : 55
+Message recu : id : 1 hl : 17  intention : 2 
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 19
+r : 88
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 20
+r : 42
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 20
+r : 47
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 20
+r : 38
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 20
+r : 54
+tableau attente pos = -1 my_position = 0 result = 0
+6 9 15 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 0 est 20
