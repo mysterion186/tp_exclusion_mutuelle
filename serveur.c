@@ -185,12 +185,18 @@ int min_tableau (int* tableau_attente, int NSites){
   int pos = 0; 
   int min = tableau_attente[0];
   for (int i = 1; i < NSites;i++){
-    if (tableau_attente[i]> -1 && min>tableau_attente[i]){
-      pos = i;
-      min = tableau_attente[i];
+    if (tableau_attente[i]> -1 ){
+      if (min != -1 && min>tableau_attente[i] ){
+        pos = i;
+        min = tableau_attente[i];
+      }
+      else if (min == -1) {
+        pos = i;
+        min = tableau_attente[i];
+      }
     }
   }
-  if (pos==0 && tableau_attente[0]){
+  if (pos==0 && tableau_attente[0]==-1 ||  tableau_attente[pos]==-1){
     return -1;
   }
   return pos;
@@ -339,6 +345,7 @@ int main (int argc, char* argv[]) {
     else{
       // on envoie une demande pour entrer dans la section critique
       if (tableau_attente[my_position]==-1){ // cas où on n'a pas encore fait de demande pour entrer en SC
+        HL++;
         tableau_attente[my_position]=HL;
         tableau_accord[my_position] = 1;
         // envoyer un message pour faire une requête d'entrée en SC
