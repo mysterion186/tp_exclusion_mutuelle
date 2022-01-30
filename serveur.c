@@ -154,16 +154,19 @@ void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockadd
   Message msg;
   int size_sock = sizeof(struct sockaddr_in);
   for (int i = 0; i <NSites;i++){
+    // on boucle sur tous les sites sauf le site actuel (pour ne pas s'envoyer un message à soi-même)
     if (i != my_position){
+      // création des sockets
       if ((tableau_socket[i] = socket(AF_INET, SOCK_STREAM,0))==-1){
         perror("Création socket");
         exit(-1);
       }
+      // connection des sockets au struct sockaddr_in pour pouvoir communiquer
       if (connect(tableau_socket[i],(struct sockaddr*) &tableau_sockaddr[i],size_sock)==-1){
             perror("connect inter-site");
             exit(-1);
         }
-      else{
+      else{ // cas où il n'y a pas d'erreur, on écrit, envoie le message et on ferme la socket 
         msg.id = my_position;
         msg.hl = HL;
         msg.intention = intention;
