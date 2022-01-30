@@ -31,7 +31,7 @@ La valeur de HL après la boucle while est 4
 Message recu : id : 2 hl : 1  intention : 1 
 Envoie du message id = 1, HL = 6 avec l'intention 2
 Valeur intermédiare de HL (après quelconque envoie 6)
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -42,7 +42,7 @@ La valeur de HL après la boucle while est 6
 Message recu : id : 2 hl : 3  intention : 2 
 Le message plus haut ne me concerne pas 
 Valeur intermédiare de HL (après quelconque envoie 6)
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -53,7 +53,7 @@ La valeur de HL après la boucle while est 6
 Message recu : id : 0 hl : 3  intention : 2 
 Le message plus haut ne me concerne pas 
 Valeur intermédiare de HL (après quelconque envoie 6)
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -61,7 +61,7 @@ test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 6
 r : 73
 La valeur de HL après la boucle while est 7
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -69,7 +69,7 @@ test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 7
 r : 45
 La valeur de HL après la boucle while est 7
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -77,7 +77,7 @@ test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 7
 r : 79
 La valeur de HL après la boucle while est 8
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -85,7 +85,7 @@ test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 8
 r : 24
 La valeur de HL après la boucle while est 8
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -93,7 +93,7 @@ test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 8
 r : 10
 La valeur de HL après la boucle while est 8
-tableau attente pos = 2 my_position = 1 result = 0
+tableau attente pos = 0 my_position = 1 result = 0
 1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
@@ -101,178 +101,181 @@ test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 8
 r : 41
 La valeur de HL après la boucle while est 8
-Message recu : id : 2 hl : 9  intention : 0 
-Valeur intermédiare de HL (après quelconque envoie 10)
-tableau attente pos = 0 my_position = 1 result = 0
-1 -1 -1 
+Message recu : id : 0 hl : 8  intention : 0 
+Valeur intermédiare de HL (après quelconque envoie 9)
+tableau attente pos = 2 my_position = 1 result = 0
+-1 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
 test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 10
+.La valeur de HL pour le site 1 à la fin de la boucle while est 9
 r : 66
-La valeur de HL après la boucle while est 10
-tableau attente pos = 0 my_position = 1 result = 0
-1 -1 -1 
+La valeur de HL après la boucle while est 9
+Message recu : id : 0 hl : 9  intention : 1 
+Envoie du message id = 1, HL = 11 avec l'intention 2
+Valeur intermédiare de HL (après quelconque envoie 11)
+tableau attente pos = 2 my_position = 1 result = 0
+9 -1 1 
 tableau accord validation de la fonction (0)
 -1 -1 -1 
 test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 10
+.La valeur de HL pour le site 1 à la fin de la boucle while est 11
 r : 93
-Envoie du message id = 1, HL = 11 avec l'intention 1
-La valeur de HL après la boucle while est 11
-tableau attente pos = 1 my_position = 1 result = 1
-1 11 -1 
+Envoie du message id = 1, HL = 12 avec l'intention 1
+La valeur de HL après la boucle while est 12
+Message recu : id : 2 hl : 16  intention : 2 
+Le message plus haut ne me concerne pas 
+Valeur intermédiare de HL (après quelconque envoie 12)
+tableau attente pos = 2 my_position = 1 result = 0
+9 12 1 
 tableau accord validation de la fonction (0)
 -1 1 -1 
 test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 11
+.La valeur de HL pour le site 1 à la fin de la boucle while est 12
 r : 43
-La valeur de HL après la boucle while est 11
-Message recu : id : 0 hl : 13  intention : 2 
-Valeur intermédiare de HL (après quelconque envoie 14)
-tableau attente pos = 1 my_position = 1 result = 1
-1 11 -1 
+La valeur de HL après la boucle while est 12
+tableau attente pos = 2 my_position = 1 result = 0
+9 12 1 
 tableau accord validation de la fonction (0)
-1 1 -1 
+-1 1 -1 
 test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 14
+.La valeur de HL pour le site 1 à la fin de la boucle while est 12
 r : 88
-La valeur de HL après la boucle while est 15
-Message recu : id : 2 hl : 14  intention : 2 
-Valeur intermédiare de HL (après quelconque envoie 16)
+La valeur de HL après la boucle while est 13
+tableau attente pos = 2 my_position = 1 result = 0
+9 12 1 
+tableau accord validation de la fonction (0)
+-1 1 -1 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 13
+r : 4
+La valeur de HL après la boucle while est 13
+Message recu : id : 2 hl : 18  intention : 2 
+Valeur intermédiare de HL (après quelconque envoie 19)
+tableau attente pos = 2 my_position = 1 result = 0
+9 12 1 
+tableau accord validation de la fonction (0)
+-1 1 1 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 19
+r : 28
+La valeur de HL après la boucle while est 19
+Message recu : id : 0 hl : 19  intention : 2 
+Valeur intermédiare de HL (après quelconque envoie 20)
+tableau attente pos = 2 my_position = 1 result = 0
+9 12 1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 20
+r : 30
+La valeur de HL après la boucle while est 20
+tableau attente pos = 2 my_position = 1 result = 0
+9 12 1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 20
+r : 41
+La valeur de HL après la boucle while est 20
+Message recu : id : 2 hl : 19  intention : 0 
+Valeur intermédiare de HL (après quelconque envoie 21)
+tableau attente pos = 0 my_position = 1 result = 0
+9 12 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 21
+r : 13
+La valeur de HL après la boucle while est 21
+tableau attente pos = 0 my_position = 1 result = 0
+9 12 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 21
+r : 4
+La valeur de HL après la boucle while est 21
+Message recu : id : 0 hl : 24  intention : 0 
+Valeur intermédiare de HL (après quelconque envoie 25)
 Rentré en section critique
 tableau attente pos = 1 my_position = 1 result = 1
-1 11 -1 
+-1 12 -1 
 tableau accord validation de la fonction (1)
 1 1 1 
 test condition (1)
-*La valeur de HL pour le site 1 à la fin de la boucle while est 17
-r : 4
-La valeur de HL après la boucle while est 17
-tableau attente pos = 1 my_position = 1 result = 1
-1 11 -1 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 1 à la fin de la boucle while est 17
-r : 28
-La valeur de HL après la boucle while est 17
-tableau attente pos = 1 my_position = 1 result = 1
-1 11 -1 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 1 à la fin de la boucle while est 17
-r : 30
-La valeur de HL après la boucle while est 17
-Message recu : id : 0 hl : 14  intention : 0 
-Valeur intermédiare de HL (après quelconque envoie 18)
-tableau attente pos = 1 my_position = 1 result = 1
--1 11 -1 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 1 à la fin de la boucle while est 18
-r : 41
-La valeur de HL après la boucle while est 18
-tableau attente pos = 1 my_position = 1 result = 1
--1 11 -1 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*La valeur de HL pour le site 1 à la fin de la boucle while est 18
-r : 13
-La valeur de HL après la boucle while est 18
-tableau attente pos = 1 my_position = 1 result = 1
--1 11 -1 
-tableau accord validation de la fonction (1)
-1 1 1 
-test condition (1)
-*Envoie du message id = 1, HL = 19 avec l'intention 0
-La valeur de HL pour le site 1 à la fin de la boucle while est 19
-r : 4
-La valeur de HL après la boucle while est 19
-tableau attente pos = -1 my_position = 1 result = 0
--1 -1 -1 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 19
+*La valeur de HL pour le site 1 à la fin de la boucle while est 26
 r : 70
-La valeur de HL après la boucle while est 19
-tableau attente pos = -1 my_position = 1 result = 0
--1 -1 -1 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 19
-r : 10
-La valeur de HL après la boucle while est 19
-Message recu : id : 2 hl : 21  intention : 1 
-Envoie du message id = 1, HL = 23 avec l'intention 2
-Valeur intermédiare de HL (après quelconque envoie 23)
-tableau attente pos = 2 my_position = 1 result = 0
--1 -1 21 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 23
-r : 58
-La valeur de HL après la boucle while est 23
-Message recu : id : 0 hl : 23  intention : 2 
-Le message plus haut ne me concerne pas 
-Valeur intermédiare de HL (après quelconque envoie 23)
-tableau attente pos = 2 my_position = 1 result = 0
--1 -1 21 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 23
-r : 61
-La valeur de HL après la boucle while est 23
-tableau attente pos = 2 my_position = 1 result = 0
--1 -1 21 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 23
-r : 34
-La valeur de HL après la boucle while est 23
-Message recu : id : 2 hl : 27  intention : 0 
-Valeur intermédiare de HL (après quelconque envoie 28)
-tableau attente pos = -1 my_position = 1 result = 0
--1 -1 -1 
-tableau accord validation de la fonction (0)
-0 0 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 28
-r : 100
-Envoie du message id = 1, HL = 29 avec l'intention 1
-La valeur de HL après la boucle while est 29
+La valeur de HL après la boucle while est 26
 tableau attente pos = 1 my_position = 1 result = 1
--1 29 -1 
-tableau accord validation de la fonction (0)
-0 1 0 
-test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 29
-r : 79
+-1 12 -1 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 1 à la fin de la boucle while est 26
+r : 10
+La valeur de HL après la boucle while est 26
+Message recu : id : 2 hl : 26  intention : 1 
+Envoie du message id = 1, HL = 28 avec l'intention 2
+Valeur intermédiare de HL (après quelconque envoie 28)
+tableau attente pos = 1 my_position = 1 result = 1
+-1 12 26 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 1 à la fin de la boucle while est 28
+r : 58
+La valeur de HL après la boucle while est 28
+Message recu : id : 0 hl : 28  intention : 2 
+Le message plus haut ne me concerne pas 
+Valeur intermédiare de HL (après quelconque envoie 28)
+tableau attente pos = 1 my_position = 1 result = 1
+-1 12 26 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 1 à la fin de la boucle while est 28
+r : 61
+La valeur de HL après la boucle while est 28
+tableau attente pos = 1 my_position = 1 result = 1
+-1 12 26 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*La valeur de HL pour le site 1 à la fin de la boucle while est 28
+r : 34
+La valeur de HL après la boucle while est 28
+tableau attente pos = 1 my_position = 1 result = 1
+-1 12 26 
+tableau accord validation de la fonction (1)
+1 1 1 
+test condition (1)
+*Envoie du message id = 1, HL = 29 avec l'intention 0
+La valeur de HL pour le site 1 à la fin de la boucle while est 29
+r : 100
+Envoie du message id = 1, HL = 30 avec l'intention 1
 La valeur de HL après la boucle while est 30
-Message recu : id : 2 hl : 29  intention : 1 
-Envoie du message id = 1, HL = 32 avec l'intention 2
-Valeur intermédiare de HL (après quelconque envoie 32)
 tableau attente pos = 2 my_position = 1 result = 0
--1 29 29 
+-1 30 26 
 tableau accord validation de la fonction (0)
 0 1 0 
 test condition (0)
-.La valeur de HL pour le site 1 à la fin de la boucle while est 32
+.La valeur de HL pour le site 1 à la fin de la boucle while est 30
+r : 79
+La valeur de HL après la boucle while est 31
+tableau attente pos = 2 my_position = 1 result = 0
+-1 30 26 
+tableau accord validation de la fonction (0)
+0 1 0 
+test condition (0)
+.La valeur de HL pour le site 1 à la fin de la boucle while est 31
 r : 17
-La valeur de HL après la boucle while est 32
-Message recu : id : 2 hl : 31  intention : 2 
+La valeur de HL après la boucle while est 31
+Message recu : id : 0 hl : 32  intention : 2 
 Valeur intermédiare de HL (après quelconque envoie 33)
 tableau attente pos = 2 my_position = 1 result = 0
--1 29 29 
+-1 30 26 
 tableau accord validation de la fonction (0)
-0 1 1 
+1 1 0 
 test condition (0)
 .La valeur de HL pour le site 1 à la fin de la boucle while est 33
