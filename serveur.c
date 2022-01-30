@@ -52,12 +52,15 @@ necessaire
 int GetSitePos(int Nbsites, char *argv[]) ;
 void WaitSync(int socket);
 void SendSync(char *site, int Port);
+// cette fonction aura pour but d'envoyer un message à tous les sites
 void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention, int to);
-int accord_tous(int* tableau_attente,int NSites); // fonction qui renvoie si tous les sites ont donnés leurs accords pour passer dans al SC 
-int min_tableau(int* tableau_attente,int NSites); // fonction qui renvoie l'indice de la valeur min du tableau 
+// fonction qui renvoie 1 si tous les sites ont donnés leurs accords pour passer dans la SC 
+int accord_tous(int* tableau_attente,int NSites); 
+// fonction qui renvoie l'indice de la valeur minimal du tableau (autre que -1)
+int min_tableau(int* tableau_attente,int NSites);  
 
 
-// création d'une struct pour tester l'envoie de msg
+// structure message qu'on va utiliser pour communiquer entre les sites
 struct Message {
   int id; // id du site qui envoie le message
   int hl; // valeur de l'horloge au moment de l'envoie des messages
@@ -146,7 +149,7 @@ void SendSync(char *Site, int Port) {
   close (s_emis); 
 }
 
-// fonction pour envoyer des messages
+// cette fonction aura pour but d'envoyer un message à tous les sites
 void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockaddr_in * tableau_sockaddr,int HL, int intention, int to){
   Message msg;
   int size_sock = sizeof(struct sockaddr_in);
@@ -172,6 +175,7 @@ void envoie_msg(int my_position,int NSites, int * tableau_socket, struct sockadd
   }
 }
 
+// fonction qui renvoie 1 si tous les sites ont donnés leurs accords pour passer dans la SC 
 int accord_tous(int* tableau_attente, int NSites){ 
   for (int i = 0; i <NSites;i++){
     if (tableau_attente[i] != 1){
@@ -181,6 +185,7 @@ int accord_tous(int* tableau_attente, int NSites){
   return 1;
 }
 
+// fonction qui renvoie l'indice de la valeur minimal du tableau (autre que -1)
 int min_tableau (int* tableau_attente, int NSites){
   int pos = 0; 
   int min = tableau_attente[0];
@@ -196,6 +201,7 @@ int min_tableau (int* tableau_attente, int NSites){
       }
     }
   }
+  // s'il y a que des -1 dans le tableau on retourne -1
   if (pos==0 && tableau_attente[0]==-1 ||  tableau_attente[pos]==-1){
     return -1;
   }
@@ -235,9 +241,9 @@ int main (int argc, char* argv[]) {
   PortBase=atoi(argv[2]) ;//+GetSitePos(NSites, argv);
   int main_site = atoi(argv[1]);
   printf("Numero de port de ce site %d\n",PortBase);
-  my_position = PortBase-main_site; // position du site selon le site de base
+  my_position = PortBase-main_site; // position du site selon le site de base (correspond à l'identifiant du site)
 
-  // socket principale ? 
+
   sock_add.sin_family = AF_INET;
   sock_add.sin_addr.s_addr= htons(INADDR_ANY);  
   sock_add.sin_port = htons(PortBase);
@@ -248,10 +254,11 @@ int main (int argc, char* argv[]) {
   int size_struct;
   int HL = 0; // va stocker la valeur de l'horloge
   int in_SC = 0; // valeur pour savoir si le processus est en SC 
-  int temp = 0; 
-  int time_SC = 0;
-  // on va utiliser la valeur en position tableau_attente[my_position] pour voir si une demande de SC a été faite
-  struct sockaddr_in tableau_sockaddr[NSites]; 
+  int temp = 0; // variable pour arrêter la boucle infinie au bout d'un certaint temps
+  int time_SC = 0; // variable qu'on va incrémenter et utiliser pour mettre fin à une SC 
+
+  
+  struct sockaddr_in tableau_sockaddr[NSites]; // tableau qui va contenir des struct sockaddr_in pour chaque site
   int tableau_socket[NSites]; // tableau qu'on va utiliser pour intialiser un socket par site
   int tableau_attente[NSites]; // tableau qu'on va utiliser pour voir les processus qui sont dans la file d'attente pour rentrer dans la SC
   int tableau_accord[NSites]; // tableau qu'on va utiliser pour savoir quels processus ont donnés leurs accords pour entrer dans la SC
@@ -272,7 +279,7 @@ int main (int argc, char* argv[]) {
   }
 
   size_struct = sizeof(struct sockaddr_in);
-  // seule le site 0 peut envoyer un msg au début pour le site 1
+  // on renseigne les différentes valeurs dans le tableau tableau_sockaddr pour pouvoir communiquer via les sites grâce aux sockets
   for (int i = 0; i < NSites; i++) {
     tableau_sockaddr[i].sin_family = AF_INET;
     tableau_sockaddr[i].sin_port = htons(main_site+i);
@@ -313,7 +320,7 @@ int main (int argc, char* argv[]) {
   }
   
 
-  
+  // affichage de l'identifiant du site et des numéros de ports des autres sites et leurs identifiants
   printf("\n\nJe suis le site %d sur le port %d\n",my_position,PortBase);
   for (int i = 0; i <NSites;i++){
     if (i != my_position){
@@ -327,6 +334,7 @@ int main (int argc, char* argv[]) {
   fcntl(s_ecoute,F_SETFL,O_NONBLOCK);
   size_sock=sizeof(struct sockaddr_in);
   
+  // seed pour générer les valeurs aléatoires, on met l'identifiant du site en seed pour que chaque site génère des nombres différents
   srand(my_position);
   //srand(time(NULL));
   /* Boucle infini*/
@@ -339,21 +347,24 @@ int main (int argc, char* argv[]) {
     if (r <= 70){
       // on ne fait rien 
     }
+    // si 70<r<90 et que le site n'est pas en section critique on incrémente la valeur de l'horloge
     else if (70<r && r<90 && in_SC != 1){
-      HL++; // incrémentation de la valeur de l'horloge'
+      HL++; 
     }
+    // on veut envoyer une demande pour entrer dans la section critique
     else{
-      // on envoie une demande pour entrer dans la section critique
-      if (tableau_attente[my_position]==-1){ // cas où on n'a pas encore fait de demande pour entrer en SC
+      // on vérifie qu'on a pas déjà fait une demande (en regardant si on a pas déjà donné son propre accord pour entrer en SC)
+      if (tableau_attente[my_position]==-1){ 
         HL++;
-        tableau_attente[my_position]=HL;
-        tableau_accord[my_position] = 1;
-        // envoyer un message pour faire une requête d'entrée en SC
+        tableau_attente[my_position]=HL; // on met sa valeur d'horloge dans la file d'attente
+        tableau_accord[my_position] = 1; // on indique qu'on donne son propre accord pour entrer en SC
+        // envoyer un message à tous les autres sites pour faire une requête d'entrée en SC
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,1,-1);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,1);
       }
     }
     printf("La valeur de HL après la boucle while est %d\n",HL);
+
     /* On commence par tester l'arrivée d'un message */
     s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
     if (s_service>0) {
@@ -361,23 +372,25 @@ int main (int argc, char* argv[]) {
       l=read(s_service,&msg,sizeof(msg));
       texte[l] ='\0';
       printf("Message recu : id : %d hl : %d  intention : %d \n",msg.id,msg.hl,msg.intention); fflush(0);
-      if (msg.intention == 0) { // fin de la SC
+      // un site nous indique qu'il sort de SC (libération)
+      if (msg.intention == 0) { 
         HL = max(HL,msg.hl)+1; // maj de l'horloge 
-        tableau_attente[msg.id]=-1;
-         
+        tableau_attente[msg.id]=-1; // on réinitialise la valeur de son horloge dans la file d'attente pour entrer en SC 
       }
-      else if (msg.intention == 1){ // demande pour être en SC
+      // un site veut entrer en SC
+      else if (msg.intention == 1){ 
         HL = max(HL,msg.hl)+1; // maj de l'horloge 
-        tableau_attente[msg.id]=msg.hl;
-        //HL = max(HL,msg.hl)+1; // maj de l'horloge  
+        tableau_attente[msg.id]=msg.hl; // on renseigne sa valeur d'horloge au moment de la demande dans la file d'attente
         HL++; //on incrémenta la valeur de HL pour indiquer qu'on envoie la réponse à l'instant d'après
-        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2,msg.id);
+        envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,2,msg.id); // envoie d'un message acceptant la requête
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,2);
       }
-      else if (msg.intention == 2 ){ // cas où on reçoit un accord et que le message est adressé à moi 
+      // cas où on reçoit un message indiquant qu'un site accepte une demande d'entrée en SC
+      else if (msg.intention == 2 ){ 
+        // on vérifie si le message est pour nous ou bien un autre site
         if (msg.to==my_position){
           HL = max(HL,msg.hl)+1; // maj de l'horloge 
-          tableau_accord[msg.id]=1;
+          tableau_accord[msg.id]=1; // on indique dans notre tableau que le site est d'accord pour que je rentre en SC
         }
         else{
           printf("Le message plus haut ne me concerne pas \n");
@@ -396,6 +409,7 @@ int main (int argc, char* argv[]) {
         in_SC = 1;
     }
 
+    // partie débogage affiche les tableaux pour voir où l'on se trouve dans l'exécution du code (qui a accepté, qui veut entrer en SC ...)
     printf("tableau attente pos = %d my_position = %d result = %d\n",min_tableau(tableau_attente,NSites),my_position,min_tableau(tableau_attente,NSites)==my_position);
     for (int i = 0; i < NSites; i++){
       printf("%d ",tableau_attente[i]);
@@ -413,21 +427,19 @@ int main (int argc, char* argv[]) {
       t=t*3;
       t=t/3;
     }
-    
-  
-    //envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0);
       
-      
+    // cas où on est dans la SC   
     if (in_SC == 1){
       printf("*");fflush(0);
       time_SC++;
+      // condition d'arrêt de le SC
       if (time_SC > 5){
         HL++; 
-        // code pour faire la libération
+        // envoie d'un message pour indiquer aux autres sites qu'on sort de SC => faut enlever ce site de la file d'attente
         envoie_msg(my_position,NSites,tableau_socket,tableau_sockaddr,HL,0,-1);
         printf("Envoie du message id = %d, HL = %d avec l'intention %d\n",my_position,HL,0);
         tableau_attente[my_position] = -1; // on s'enlève de la liste des sites qui veulent aller en SC
-        // on remet à 0 les accords pour entrer en SC
+        // on réinitalise la tableau accord car on ne veut plus entrer en SC
         for (int i = 0; i < NSites; i++){
           tableau_accord[i] = 0;
         }
